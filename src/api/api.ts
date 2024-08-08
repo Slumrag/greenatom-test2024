@@ -1,7 +1,8 @@
-import { createDirectus, rest, readFiles, readItems } from '@directus/sdk';
+import { createDirectus, rest, readFiles, readItems, readAssetRaw, Identity } from '@directus/sdk';
+import { Schema } from './schema/schema';
 
-const client = createDirectus('http://localhost:8055').with(rest());
-// .with(authentication('cookie', { credentials: 'include' }));
+const client = createDirectus<Schema>('http://localhost:8055').with(rest());
+
 export const loadImages = async () =>
   await client.request(
     readFiles({
@@ -12,4 +13,17 @@ export const loadImages = async () =>
       },
     })
   );
+
 export const loadAlbums = async () => await client.request(readItems('albums'));
+
+export const loadImage = async (fileId: string, key: string = 'full-image'): Promise<string> => {
+  const stream = await client.request(readAssetRaw(fileId, { key }));
+  const blob = await new Response(stream).blob();
+  const url = URL.createObjectURL(blob);
+
+  return url;
+};
+
+export type ImageItem = Identity<Awaited<ReturnType<typeof loadImages>>[0]>;
+
+export type AlbumItem = Identity<Awaited<ReturnType<typeof loadAlbums>>[0]>;

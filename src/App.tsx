@@ -1,10 +1,10 @@
 import './App.css';
-import { loadAlbums, loadImages } from './api/api';
+import { ImageGallery } from './components/ImageGallery/ImageGallery';
 
 function App() {
   return (
     <div className=''>
-      <button
+      {/* <button
         onClick={() => {
           loadImages().then((res) => console.log('images', res));
         }}
@@ -17,7 +17,8 @@ function App() {
         }}
       >
         load albums
-      </button>
+      </button> */}
+      <ImageGallery></ImageGallery>
     </div>
   );
 }
