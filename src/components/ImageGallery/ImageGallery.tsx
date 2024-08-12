@@ -1,14 +1,23 @@
 import { useEffect, useState } from 'react';
-import { ImageItem, loadImages } from '../../api/api';
 import { ImageCard } from './ImageCard/ImageCard';
+import { observer } from 'mobx-react-lite';
+import { useMainStore } from '@/store/MainStore/useMainStore';
+import { AlbumStore } from '@/store/MainStore/objects/AlbumStore';
 
-export function ImageGallery() {
-  const [images, setImages] = useState<ImageItem[]>([]);
-
+export const ImageGallery = observer(() => {
+  const store = useMainStore();
+  // let album;
+  const [album, setAlbum] = useState<AlbumStore>();
   useEffect(() => {
-    loadImages()
-      .then((res) => setImages(res))
-      .catch((err) => console.error(err));
+    store
+      ?.loadAlbums()
+      // .then(() => console.log(store.albums))
+      .then(() => store.albums[0].loadImages())
+      .then(() => setAlbum(store.albums[0]));
+
+    return () => {
+      store?.clear();
+    };
   }, []);
 
   return (
@@ -22,9 +31,9 @@ export function ImageGallery() {
         gap: '10px',
       }}
     >
-      {images.map((img) => (
-        <ImageCard key={img.id} id={img.id} title={img.title ?? ''}></ImageCard>
+      {album?.images.map((img) => (
+        <ImageCard key={img.id} image={img}></ImageCard>
       ))}
     </div>
   );
-}
+});

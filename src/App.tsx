@@ -1,26 +1,14 @@
+import { observer } from 'mobx-react-lite';
 import './App.css';
 import { ImageGallery } from './components/ImageGallery/ImageGallery';
+import { MainStoreProvider } from './store/MainStore/MainStoreProvider';
 
-function App() {
+const App = observer(() => {
   return (
-    <div className=''>
-      {/* <button
-        onClick={() => {
-          loadImages().then((res) => console.log('images', res));
-        }}
-      >
-        load images
-      </button>
-      <button
-        onClick={() => {
-          loadAlbums().then((res) => console.log(res));
-        }}
-      >
-        load albums
-      </button> */}
+    <MainStoreProvider>
       <ImageGallery></ImageGallery>
-    </div>
+    </MainStoreProvider>
   );
-}
+});
 
 export default App;

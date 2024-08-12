@@ -1,16 +1,17 @@
 import { useEffect, useState } from 'react';
-import { loadImage } from '../../../api/api';
+import { observer } from 'mobx-react-lite';
+import { directusApi } from '@/api/api';
+import { ImageItem } from '@/api/types/types';
 
 interface ImageCardProps {
-  id: string;
-  title: string;
+  image: ImageItem;
 }
 
-export const ImageCard = ({ id, title }: ImageCardProps) => {
+export const ImageCard = observer(({ image }: ImageCardProps) => {
   const [imageURL, setImageURL] = useState('');
   useEffect(() => {
-    loadImage(id, 'thumbnail').then((res) => setImageURL(res));
-  }, [id]);
+    directusApi.loadImage(image.id, 'thumbnail').then((res) => setImageURL(res));
+  }, [image]);
 
   return (
     <div
@@ -21,16 +22,19 @@ export const ImageCard = ({ id, title }: ImageCardProps) => {
         background: 'grey',
       }}
     >
-      <img
-        src={imageURL}
-        alt={title}
-        style={{
-          display: 'flex',
-          objectFit: 'contain',
-          width: '100%',
-        }}
-      />
-      <p>{title}</p>
+      <div style={{ display: 'flex' }}>
+        <img
+          src={imageURL}
+          alt={image.title?.replace(/\.\w+/, '') ?? ''}
+          style={{
+            display: 'flex',
+            objectFit: 'contain',
+            width: '100%',
+          }}
+        />
+      </div>
+
+      <p>{image.title?.replace(/\.\w+/, '') ?? ''}</p>
     </div>
   );
-};
+});
