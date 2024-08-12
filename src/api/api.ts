@@ -1,29 +1,58 @@
-import { createDirectus, rest, readFiles, readItems, readAssetRaw, Identity } from '@directus/sdk';
+import {
+  createDirectus,
+  rest,
+  readFiles,
+  readItems,
+  readAssetRaw,
+  readFolders,
+} from '@directus/sdk';
 import { Schema } from './schema/schema';
 
-const client = createDirectus<Schema>('http://localhost:8055').with(rest());
+class DirectusApi {
+  client;
+  static instance: DirectusApi;
+  constructor() {
+    this.client = createDirectus<Schema>('http://localhost:8055').with(rest());
 
-export const loadImages = async () =>
-  await client.request(
-    readFiles({
-      filter: {
-        type: {
-          _contains: 'image',
+    if (DirectusApi.instance !== undefined) {
+      return DirectusApi.instance;
+    }
+
+    DirectusApi.instance = this;
+  }
+
+  loadChildFolders = async (parent: string) =>
+    await this.client.request(readFolders({ filter: { parent: { name: { _eq: parent } } } }));
+
+  loadImages = async (folder: string) =>
+    await this.client.request(
+      readFiles({
+        filter: {
+          type: {
+            _contains: 'image',
+          },
+          folder: {
+            name: { _eq: folder },
+          },
         },
-      },
-    })
-  );
+      })
+    );
 
-export const loadAlbums = async () => await client.request(readItems('albums'));
+  loadAlbums = async () =>
+    await this.client.request(
+      readItems('albums', { fields: ['*', { images: ['directus_files_id'] }] })
+    );
 
-export const loadImage = async (fileId: string, key: string = 'full-image'): Promise<string> => {
-  const stream = await client.request(readAssetRaw(fileId, { key }));
-  const blob = await new Response(stream).blob();
-  const url = URL.createObjectURL(blob);
+  loadImage = async (
+    fileId: string,
+    key: 'full-image' | 'thumbnail' = 'full-image'
+  ): Promise<string> => {
+    const stream = await this.client.request(readAssetRaw(fileId, { key }));
+    const blob = await new Response(stream).blob();
+    const url = URL.createObjectURL(blob);
 
-  return url;
-};
+    return url;
+  };
+}
 
-export type ImageItem = Identity<Awaited<ReturnType<typeof loadImages>>[0]>;
-
-export type AlbumItem = Identity<Awaited<ReturnType<typeof loadAlbums>>[0]>;
+export const directusApi = new DirectusApi();
