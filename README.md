@@ -1,30 +1,44 @@
-# React + TypeScript + Vite
+# Приложение "Галерея"
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Сборка
 
-Currently, two official plugins are available:
+Для работы приложения на компьютер должен быть установлен **Docker** и **node.js**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+1. Клонируем репозиторий
+`git clone https://github.com/Slumrag/greenatom-test2024.git`
 
-## Expanding the ESLint configuration
+1. Устанавливаем JavaScript зависимости
+`npm i`
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+1. Запускаем Docker
+1. Разворачиваем контейнер с бекэндом
+`docker compose up`
 
-- Configure the top-level `parserOptions` property like this:
+1. Запускаем сервер vite
+`npm run dev`
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json', './tsconfig.app.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+## функционал
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+В приложении реализовал:
+
+- Адаптивную мобильную вёрстку
+- открытие модалки с увеличенным изображением при клики на карточку с изображением
+
+Альбомы на бекэнде реализованы в виде папок внутри папки *albums*. Внутри каждой папки находятся изображения альбома. Вложенные в альбом папки и файлы игнорируются.
+
+PS Для построения интерфейса использовал react-bootstrap. Для работы с api directus использовал directus SDK.
+
+## Скриншоты
+
+![desktop view](screenshots/image.png)
+![mobile view](screenshots/image-1.png)
+![desktop modal](screenshots/image-2.png)
+![mobile modal](screenshots/image-3.png)
+
+**Данные для доступа в directus**
+
+admin
+
+<admin@example.com>
+
+d1r3ctu5
