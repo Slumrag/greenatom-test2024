@@ -20,7 +20,7 @@ export const ImagePreview = observer(
     }, [image]);
 
     return (
-      <Modal centered backdrop fullscreen='md-down' onHide={onClose} show={isOpen}>
+      <Modal centered backdrop fullscreen='md-down' onHide={onClose} size='lg' show={isOpen}>
         <Modal.Header closeButton>{image?.title?.replace(/\.\w+/, '') ?? ''}</Modal.Header>
         <Modal.Body style={{ display: 'flex', justifyContent: 'center' }}>
           <Image src={imageURL} alt={image?.title ?? ''} fluid style={{ objectFit: 'contain' }} />
