@@ -36,6 +36,7 @@ export const ImageGallery = observer(() => {
 
   return (
     <>
+      <h2>{album?.name}</h2>
       <div className={styles.ImageGalleryGrid}>
         {album?.images.map((img) => (
           <ImageCard key={img.id} image={img} onClick={() => handleOpen(img)}></ImageCard>
